@@ -88,9 +88,7 @@ while k <= n + 1
       tempdiff1 = tempdiff1 .* tempdiff1;
       %%% q integral %%%
       q2     = alpha(t(k)) + beta(t(k)) * SimpsRule (h, tempdiff1);
-      condN2 = NaN; %%% Condition Number %%%
       q      = [q;q2];
-      CondN2 = [CondN2;condN2]; %%% Condition Number %%%
       val_u(k,:) = u(x,t(k));
       err(k) = max(abs(app_u(k,:) - val_u(k,:)));
     otherwise
@@ -121,6 +119,7 @@ while k <= n + 1
   k = k + 1;
 endwhile
 clear ('k');
+CondN2 = [CondN2;NaN]; %%% Condition Number %%%
 
 
 
