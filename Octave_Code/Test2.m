@@ -1,7 +1,7 @@
 %%% Test %%%
 %  The oscillation number of test function %
-osc = 5;
-% osc = 17;
+##osc = 5;
+osc = 17;
 % functions %
 u1    = @(x) sin((osc * pi * x) / ell);
 u2    = @(t) exp(pi * t);
