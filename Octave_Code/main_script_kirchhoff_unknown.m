@@ -92,6 +92,8 @@ while max(max(abs(u_old - u_new(1:2:end,:)))) >= Tol
         tempdiff1  = tempdiff1 .* tempdiff1;
         %% q integral %%
         q2         = alpha(t(k)) + beta(t(k)) * SimpsRule (h, tempdiff1);
+        condn      = NaN; %%% Condition Number %%%
+        cond       = [cond;condn]; %%% Condition Number %%%
       otherwise
         v      = tau * tau * f(x,t(k - 1)) + 2 * u_new(k - 1,:);
         coeff1 = (delta * delta) / q2; % tridiagonal system coefficients %
@@ -116,9 +118,8 @@ while max(max(abs(u_old - u_new(1:2:end,:)))) >= Tol
     endswitch
     k = k + 1;
   endwhile
-  cond     = [cond;NaN]; %%% Condition Number %%%
   error    = [error;max(max(abs(u_old - u_new(1:2:end,:))))];
-  max_cond = [max_cond;max(cond(2:(end - 1)))];
+  max_cond = [max_cond;max(cond)];
   CondN2   = [CondN2,cond];
   count    = count + 1;
   fprintf('n = %d\n', n);
