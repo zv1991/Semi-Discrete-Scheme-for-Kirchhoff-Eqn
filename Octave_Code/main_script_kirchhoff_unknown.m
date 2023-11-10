@@ -49,7 +49,7 @@ u_new = ones(n + 1,m + 1);
 N      = [];
 Delta  = [];
 
-Tol   = 1e-1;
+Tol   = 1e-2;
 count = 1;
 
 %%% For condition number %%%
