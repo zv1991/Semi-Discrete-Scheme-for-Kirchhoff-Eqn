@@ -14,17 +14,17 @@ T   = 1;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 disp('Please input numbers, e.g. 1, 2, ...');
-problem = 2;
+problem = 0;
 run(sprintf('%s%d.m','Test',problem));
 % Exact_Test
 % Test1
 % Test2
 
 %%% Division numbers of the temporal and the spatial intervals %%%
-m = 64; % Division number of the spatial interval %
-##n = 2;
+m = 6; % Division number of the spatial interval %
+n = 2;
 ##n = T * (m / ell); % Division number of the temporal interval %
-n = T * (m / ell) * (m / ell); % Division number of the temporal interval %
+##n = T * (m / ell) * (m / ell); % Division number of the temporal interval %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%% Discretization of the temporal interval %%%
@@ -127,7 +127,6 @@ CondN2 = [CondN2;NaN]; %%% Condition Number %%%
 max_rel_error_q = max(abs(1 - q ./ q_exact)); %%% maximum relative error %%%
 
 
-
 tEnd = cputime - tStart; % For CPU time determination %
 if tEnd == 1
   fprintf('CPU time is %.2f second\n', tEnd);
@@ -144,7 +143,7 @@ else
 endif
 clear tStart tEnd
 
-dirname  = sprintf('Test%d',problem);
+dirname = sprintf('Test%d',problem);
 if not(isfolder(dirname))
   mkdir(dirname); % Folder creator %
 endif
@@ -170,28 +169,28 @@ filecsv  = sprintf('error_Test%d_osc%d_n%d_m%d_appr.csv',problem,osc,n,m);
 cHeader  = {'t','error'};
 save_as_csv (my_table, filecsv, dirname, cHeader);
 
-node_t = [n / 4 + 1, n / 2 + 1, (3 * n) / 4 + 1, n + 1];
-node_t = round(node_t);
-clear("i");
-max_err    = [];
-max_CondN2 = [];
-for i = 1:length(node_t)
-  max_err    = [max_err;max(err(1:node_t(i)))];
-  max_CondN2 = [max_CondN2;max(CondN2(2:(node_t(i) - 1)))];
-endfor
-my_table = [(node_t - 1)',t(node_t)',max_err,max_CondN2];
-filecsv  = sprintf('errorTable_Test%d_osc%d_n%d_m%d.csv',problem,osc,n,m);
-cHeader  = {'k','t_k',sprintf('error_n%d_m%d',n,m),'CondN2'};
-save_as_csv (my_table, filecsv, dirname, cHeader);
+##node_t = [n / 4 + 1, n / 2 + 1, (3 * n) / 4 + 1, n + 1];
+##node_t = round(node_t);
+##clear("i");
+##max_err    = [];
+##max_CondN2 = [];
+##for i = 1:length(node_t)
+##  max_err    = [max_err;max(err(1:node_t(i)))];
+##  max_CondN2 = [max_CondN2;max(CondN2(2:(node_t(i) - 1)))];
+##endfor
+##my_table = [(node_t - 1)',t(node_t)',max_err,max_CondN2];
+##filecsv  = sprintf('errorTable_Test%d_osc%d_n%d_m%d.csv',problem,osc,n,m);
+##cHeader  = {'k','t_k',sprintf('error_n%d_m%d',n,m),'CondN2'};
+##save_as_csv (my_table, filecsv, dirname, cHeader);
 %%%%%%%%%%%%%%%%%
 
 %%% generate mat file %%%
 filemat  = sprintf('Results_Test%d_osc=%d_n=%d_m=%d.mat',problem,osc,n,m);
 matfile  = fullfile(dirname,filemat);
-save(matfile,"t","tau","x","h","delta","CondN2","val_u","app_u","q","err",...
-"q_exact","max_rel_error_q","ell","T","m","n","node_t","problem");
 ##save(matfile,"t","tau","x","h","delta","CondN2","val_u","app_u","q","err",...
-##"ell","T","m","n","problem");
+##"q_exact","max_rel_error_q","ell","T","m","n","node_t","problem");
+save(matfile,"t","tau","x","h","delta","CondN2","val_u","app_u","q","err",...
+"q_exact","max_rel_error_q","ell","T","m","n","problem");
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 clearvars -except matfile
