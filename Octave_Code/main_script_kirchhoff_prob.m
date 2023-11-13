@@ -94,10 +94,10 @@ while k <= n + 1
       val_u(k,:) = u(x,t(k));
       err(k)     = max(abs(app_u(k,:) - val_u(k,:)));
     otherwise
-      v        = tau * tau * f(x,t(k - 1)) + 2 * app_u(k - 1,:);
-      coeff1   = (delta * delta) / q2; % tridiagonal system coefficients %
-      coeff2   = coeff1 / 6; % tridiagonal system coefficients %
-      b(:)     = -2 * (1 + coeff1 * (1 + coeff2));
+      v          = tau * tau * f(x,t(k - 1)) + 2 * app_u(k - 1,:);
+      coeff1     = (delta * delta) / q2; % tridiagonal system coefficients %
+      coeff2     = coeff1 / 6; % tridiagonal system coefficients %
+      b(:)       = -2 * (1 + coeff1 * (1 + coeff2));
       for i = 2:m
         phi(i) = -coeff2 * (v(i - 1) + 2 * (5 + coeff1) * v(i) + v(i + 1));
       endfor
@@ -124,7 +124,7 @@ endwhile
 clear ('k');
 CondN2 = [CondN2;NaN]; %%% Condition Number %%%
 
-rel_error_q = abs(1 - q ./ q_exact); %%% maximum relative error %%%
+rel_error_q = abs(1 - q ./ q_exact); %%% relative error of q_k %%%
 
 
 tEnd = cputime - tStart; % For CPU time determination %
@@ -172,23 +172,27 @@ save_as_csv (my_table, filecsv, dirname, cHeader);
 node_t = [n / 4 + 1, n / 2 + 1, (3 * n) / 4 + 1, n + 1];
 node_t = round(node_t);
 clear("i");
-max_err    = [];
-max_CondN2 = [];
+max_err         = [];
+max_CondN2      = [];
+max_rel_error_q = [];
 for i = 1:length(node_t)
-  max_err    = [max_err;max(err(1:node_t(i)))];
-  max_CondN2 = [max_CondN2;max(CondN2(2:(node_t(i) - 1)))];
+  max_err         = [max_err;max(err(1:node_t(i)))];
+  max_CondN2      = [max_CondN2;max(CondN2(2:(node_t(i) - 1)))];
+  max_rel_error_q = [max_rel_error_q;max(rel_error_q(1:node_t(i)))];
 endfor
-my_table = [(node_t - 1)',t(node_t)',max_err,max_CondN2];
+my_table = [(node_t - 1)',t(node_t)',max_err,max_CondN2,max_rel_error_q];
 filecsv  = sprintf('errorTable_Test%d_osc%d_n%d_m%d.csv',problem,osc,n,m);
-cHeader  = {'k','t_k',sprintf('error_n%d_m%d',n,m),'CondN2'};
+cHeader  = {'k','t_k',sprintf('max_error_n%d_m%d',n,m),'max_CondN2',...
+'max_rel_error_q'};
 save_as_csv (my_table, filecsv, dirname, cHeader);
 %%%%%%%%%%%%%%%%%
+max_rel_error_q = max(rel_error_q);   % maximum rel. error of q_k %%%
 
 %%% generate mat file %%%
 filemat  = sprintf('Results_Test%d_osc=%d_n=%d_m=%d.mat',problem,osc,n,m);
 matfile  = fullfile(dirname,filemat);
 save(matfile,"t","tau","x","h","delta","CondN2","val_u","app_u","q","err",...
-"q_exact","rel_error_q","ell","T","m","n","node_t","problem");
+"q_exact","rel_error_q","max_rel_error_q","ell","T","m","n","node_t","problem");
 ##save(matfile,"t","tau","x","h","delta","CondN2","val_u","app_u","q","err",...
 ##"q_exact","max_rel_error_q","ell","T","m","n","problem");
 %%%%%%%%%%%%%%%%%%%%%%%%%
