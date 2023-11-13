@@ -21,8 +21,8 @@ run(sprintf('%s%d.m','Test',problem));
 % Test2
 
 %%% Division numbers of the temporal and the spatial intervals %%%
-m = 32; % Division number of the spatial interval %
-n = 9500;
+m = 85; % Division number of the spatial interval %
+n = 47000;
 ##n = 2;
 ##n = T * (m / ell); % Division number of the temporal interval %
 ##n = T * (m / ell) * (m / ell); % Division number of the temporal interval %
