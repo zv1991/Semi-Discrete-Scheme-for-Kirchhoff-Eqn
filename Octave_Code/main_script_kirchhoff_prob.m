@@ -120,6 +120,7 @@ while k <= n + 1
 endwhile
 clear ('k');
 CondN2 = [CondN2;NaN]; %%% Condition Number %%%
+err_q  = abs(q - (alpha(t) + beta(t) * intdu(t)));
 
 
 
@@ -184,7 +185,7 @@ save_as_csv (my_table, filecsv, dirname, cHeader);
 filemat  = sprintf('Results_Test%d_osc=%d_n=%d_m=%d.mat',problem,osc,n,m);
 matfile  = fullfile(dirname,filemat);
 save(matfile,"t","tau","x","h","delta","CondN2","val_u","app_u","q","err",...
-"ell","T","m","n","node_t","problem");
+"err_q","ell","T","m","n","node_t","problem");
 ##save(matfile,"t","tau","x","h","delta","CondN2","val_u","app_u","q","err",...
 ##"ell","T","m","n","problem");
 %%%%%%%%%%%%%%%%%%%%%%%%%
