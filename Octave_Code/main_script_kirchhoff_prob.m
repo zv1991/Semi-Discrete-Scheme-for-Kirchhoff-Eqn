@@ -21,7 +21,7 @@ run(sprintf('%s%d.m','Test',problem));
 % Test2
 
 %%% Division numbers of the temporal and the spatial intervals %%%
-m = 256; % Division number of the spatial interval %
+m = 32; % Division number of the spatial interval %
 ##n = 2;
 ##n = T * (m / ell); % Division number of the temporal interval %
 n = T * (m / ell) * (m / ell); % Division number of the temporal interval %
@@ -124,7 +124,7 @@ endwhile
 clear ('k');
 CondN2 = [CondN2;NaN]; %%% Condition Number %%%
 
-max_rel_error_q = max(abs(1 - q ./ q_exact)); %%% maximum relative error %%%
+rel_error_q = abs(1 - q ./ q_exact); %%% maximum relative error %%%
 
 
 tEnd = cputime - tStart; % For CPU time determination %
@@ -188,7 +188,7 @@ save_as_csv (my_table, filecsv, dirname, cHeader);
 filemat  = sprintf('Results_Test%d_osc=%d_n=%d_m=%d.mat',problem,osc,n,m);
 matfile  = fullfile(dirname,filemat);
 save(matfile,"t","tau","x","h","delta","CondN2","val_u","app_u","q","err",...
-"q_exact","max_rel_error_q","ell","T","m","n","node_t","problem");
+"q_exact","rel_error_q","ell","T","m","n","node_t","problem");
 ##save(matfile,"t","tau","x","h","delta","CondN2","val_u","app_u","q","err",...
 ##"q_exact","max_rel_error_q","ell","T","m","n","problem");
 %%%%%%%%%%%%%%%%%%%%%%%%%
