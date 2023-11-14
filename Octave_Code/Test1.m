@@ -2,8 +2,8 @@
 %  The oscillation number of test function %
 
 ##osc = 1;
-osc = 3;
-##osc = 7;
+##osc = 3;
+osc = 7;
 ##osc = 11;
 
 % functions %
