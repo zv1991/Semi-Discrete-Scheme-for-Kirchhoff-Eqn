@@ -173,11 +173,32 @@ if not(isfolder(dirname))
   mkdir(dirname); % Folder creator %
 endif
 
-run("csvtable_slr.m");
-run("csvtable_log10.m");
-run("csvtable_time.m");
-run("csvtable_max_rel_error_q.m");
-run("csvtable_maxCondN2.m");
+%%% CSV Files %%%
+my_table = [osc,beta1,beta0,min_res,max_res,r_squared];
+filecsv  = sprintf('Table_Test%d_osc=%d.csv',problem,osc);
+cHeader  = {'osc','slope','yintercept','min_res','max_res','r_squared'};
+save_as_csv (my_table, filecsv, dirname, cHeader);
+
+my_table = [tau1,error];
+filecsv  = sprintf('Log_graph_Test%d_osc=%d.csv',problem,osc);
+cHeader  = {'tau','error'};
+save_as_csv (my_table, filecsv, dirname, cHeader);
+
+my_table = [n1,max_rel_error_q];
+filecsv  = sprintf('max_rel_error_q_Test%d_osc=%d.csv',problem,osc);
+cHeader  = {'div_numb','max_rel_error_q'};
+save_as_csv (my_table, filecsv, dirname, cHeader);
+
+my_table = [n1,max_CondN2];
+filecsv  = sprintf('max_CondN2_Test%d_osc=%d.csv',problem,osc);
+cHeader  = {'div_numb','max_CondN2'};
+save_as_csv (my_table, filecsv, dirname, cHeader);
+
+my_table = [n1,time];
+filecsv  = sprintf('Time_Test%d_osc=%d.csv',problem,osc);
+cHeader  = {'div_numb','time'};
+save_as_csv (my_table, filecsv, dirname, cHeader);
+%%%%%%%%%%%%%%%%%
 
 %%% generate mat file %%%
 filemat  = sprintf('log_log_graph_Test%d_osc=%d.mat',problem,osc);
