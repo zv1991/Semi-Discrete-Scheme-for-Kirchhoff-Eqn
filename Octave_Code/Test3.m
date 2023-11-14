@@ -1,7 +1,7 @@
 %%% Test %%%
 %  The oscillation number of test function %
-osc = 5;
-##osc = 17;
+##osc = 5;
+osc = 17;
 
 amp = 1; %% Amplitude %%
 
