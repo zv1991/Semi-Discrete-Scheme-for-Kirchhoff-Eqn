@@ -38,83 +38,93 @@ b   = zeros(1,length(x) - 2); % diagonal entries %
 phi = zeros(1,length(x)); % right-hand side %
 w   = zeros(1,length(x)); % Solution of tridiagonal system %
 
-coeffsys2 = h * h; % tridiagonal system coefficients %
+coeffsys2       = h * h; % tridiagonal system coefficients %
 
-error      = []; %%% error initialization %%%
-n1         = [];
-tau1       = [];
-time       = [];
-max_CondN2 = []; %%% Maximum Condition Number of Matrix %%%
+error           = []; %%% error initialization %%%
+n1              = [];
+tau1            = [];
+time            = [];
+max_CondN2      = []; %%% Maximum Condition Number of Matrix %%%
+max_rel_error_q = []; %%% maximum relative error of q_k %%%
 
 n_max = m;
 % n_max = 1024;
 
 elaps_t = tic;
 for j = 1e1:1e1:n_max
-  tStart = cputime; % For CPU time determination %
-  n      = j;
-  n1     = [n1;n];
+  tStart      = cputime; % For CPU time determination %
+  n           = j;
+  n1          = [n1;n];
   %%% Discretization of the temporal interval %%%
-  t      = linspace(0,T,n + 1);
-  tau    = T / n;
-  tau1   = [tau1;tau];
-  CondN2 = []; %%% Condition Number of Matrix %%%
+  t           = linspace(0,T,n + 1);
+  tau         = T / n;
+  tau1        = [tau1;tau];
+  CondN2      = []; %%% Condition Number of Matrix %%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
   %%% Initialization of approximation of the functions u(x,t) on the grid %%%
-  val_u      = zeros(length(t),length(x)); % exact values of u(x,t) %
-  app_u      = zeros(length(t),length(x)); % approximate values of u_k(x) %
+  val_u       = zeros(length(t),length(x)); % exact values of u(x,t) %
+  app_u       = zeros(length(t),length(x)); % approximate values of u_k(x) %
 
-  coeffsys1  = 1 / (tau * tau); % tridiagonal system coefficients %
+  coeffsys1   = 1 / (tau * tau); % tridiagonal system coefficients %
 
   k = 1;
   while k <= n + 1
     fprintf('Layer, k = %d\n', k);
     switch k
       case 1
-        app_u(k,:) = psi0(x);
-        tempdiff1  = FinDiff (h, app_u(k,:));
-        tempdiff1  = tempdiff1 .* tempdiff1;
+        app_u(k,:)   = psi0(x);
+        tempdiff1    = FinDiff (h, app_u(k,:));
+        tempdiff1    = tempdiff1 .* tempdiff1;
         %%% q integral %%%
-        q1         = alpha(t(k)) + beta(t(k)) * SimpsRule (h, tempdiff1);
-        condN2     = NaN; %%% Condition Number %%%
-        CondN2     = [CondN2;condN2]; %%% Condition Number %%%
-        val_u(k,:) = u(x,t(k));
+        q1           = alpha(t(k)) + beta(t(k)) * SimpsRule (h, tempdiff1);
+        q1_exact     = alpha(t(k)) + beta(t(k)) * intdu(t(k));
+        rel_error_q1 = abs(1 - q1 / q1_exact);
+        condN2       = NaN; %%% Condition Number %%%
+        CondN2       = [CondN2;condN2]; %%% Condition Number %%%
+        val_u(k,:)   = u(x,t(k));
       case 2
-        % app_u(k,:) = u(x,t(k));
-        app_u(k,:) = app_u(k - 1,:) + tau * (psi1(x) + 0.5 * tau * ...
+        app_u(k,:)   = app_u(k - 1,:) + tau * (psi1(x) + 0.5 * tau * ...
         (f(x,t(k - 1)) + q1 * d2psi0));
-        tempdiff1  = FinDiff (h, app_u(k,:));
-        tempdiff1  = tempdiff1 .* tempdiff1;
+        tempdiff1    = FinDiff (h, app_u(k,:));
+        tempdiff1    = tempdiff1 .* tempdiff1;
         %%% q integral %%%
-        q2 = alpha(t(k)) + beta(t(k)) * SimpsRule (h, tempdiff1);
-        val_u(k,:) = u(x,t(k));
+        q2           = alpha(t(k)) + beta(t(k)) * SimpsRule (h, tempdiff1);
+        q2_exact     = alpha(t(k)) + beta(t(k)) * intdu(t(k));
+        rel_error_q2 = abs(1 - q2 / q2_exact);
+        rel_error_q2 = max(rel_error_q1,rel_error_q2);
+        val_u(k,:)   = u(x,t(k));
       otherwise
-        p      = coeffsys1 / q2;
-        coeff1 = coeffsys2 * p;
-        coeff2 = coeff1 / 6;
-        v      = tau * tau * f(x,t(k - 1)) + 2 * app_u(k - 1,:);
-        b(:)   = -2 * (1 + coeff1 * (1 + coeff2));
+        p        = coeffsys1 / q2;
+        coeff1   = coeffsys2 * p;
+        coeff2   = coeff1 / 6;
+        v        = tau * tau * f(x,t(k - 1)) + 2 * app_u(k - 1,:);
+        b(:)     = -2 * (1 + coeff1 * (1 + coeff2));
         for i = 2:m
           phi(i) = -coeff2 * (v(i - 1) + 2 * (5 + coeff1) * v(i) + v(i + 1));
         endfor
         clear i
-        w(2:m)     = tridiagonal_algotirhm (b, phi(2:m));
-        app_u(k,:) = w - app_u(k - 2,:);
-        val_u(k,:) = u(x,t(k));
-        tempdiff1  = FinDiff (h, app_u(k,:));
-        tempdiff1  = tempdiff1 .* tempdiff1;
-        q3         = alpha(t(k)) + beta(t(k)) * SimpsRule (h, tempdiff1);
+        w(2:m)       = tridiagonal_algotirhm (b, phi(2:m));
+        app_u(k,:)   = w - app_u(k - 2,:);
+        val_u(k,:)   = u(x,t(k));
+        tempdiff1    = FinDiff (h, app_u(k,:));
+        tempdiff1    = tempdiff1 .* tempdiff1;
+        q3           = alpha(t(k)) + beta(t(k)) * SimpsRule (h, tempdiff1);
+        q3_exact     = alpha(t(k)) + beta(t(k)) * intdu(t(k));
+        rel_error_q3 = abs(1 - q3 / q3_exact);
+        rel_error_q3 = max(rel_error_q2,rel_error_q3);
         %%% Condition Number %%%
-        condN2     = 1 + (2 * eigcos) / (1 + coeff1 * (1 + coeff2) - eigcos);
+        condN2       = 1 + (2 * eigcos) / (1 + coeff1 * (1 + coeff2) - eigcos);
         %%%%%%%%%%%%%%%%%%%%%%%%
-        CondN2     = [CondN2;condN2]; %%% Condition Number %%%
-        q1 = q2;
-        q2 = q3;
+        CondN2       = [CondN2;condN2]; %%% Condition Number %%%
+        q1           = q2;
+        q2           = q3;
+        rel_error_q2 = rel_error_q3;
     endswitch
     k = k + 1;
   endwhile
-  CondN2 = [CondN2;NaN]; %%% Condition Number %%%
+  max_rel_error_q = [max_rel_error_q;rel_error_q2];
+  CondN2          = [CondN2;NaN]; %%% Condition Number %%%
 
   tEnd = cputime - tStart; % For CPU time determination %
   time = [time;tEnd];
@@ -166,6 +176,7 @@ endif
 run("csvtable_slr.m");
 run("csvtable_log10.m");
 run("csvtable_time.m");
+run("csvtable_max_rel_error_q.m");
 run("csvtable_maxCondN2.m");
 
 %%% generate mat file %%%
@@ -173,7 +184,7 @@ filemat  = sprintf('log_log_graph_Test%d_osc=%d.mat',problem,osc);
 matfile  = fullfile(dirname,filemat);
 save(matfile,"h","n1","error","tau1","tau10","tau2","time","n10","error10",...
 "max_CondN2","n2","error2","S_xy","S_xx","S_yy","beta1","beta0","y2","res",...
-"min_res","max_res","r_squared","total_t");
+"min_res","max_res","max_rel_error_q","r_squared","total_t");
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 clearvars -except matfile
