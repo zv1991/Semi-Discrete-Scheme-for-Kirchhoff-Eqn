@@ -14,17 +14,17 @@ T   = 1;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 disp('Please input numbers, e.g. 1, 2, ...');
-problem = 2;
+problem = 3;
 run(sprintf('%s%d.m','Test',problem));
 % Exact_Test
 % Test1
 % Test2
 
 %%% Division numbers of the temporal and the spatial intervals %%%
-m = 300; % Division number of the spatial interval %
+m = 16; % Division number of the spatial interval %
 ##n = 2;
-##n = T * (m / ell); % Division number of the temporal interval %
-n = T * (m / ell) * (m / ell); % Division number of the temporal interval %
+n = T * (m / ell); % Division number of the temporal interval %
+##n = T * (m / ell) * (m / ell); % Division number of the temporal interval %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%% Discretization of the temporal interval %%%
