@@ -9,3 +9,9 @@ This paper considers the Cauchy problem for the nonlinear dynamic string equatio
 <div align="justify">
 For more information, see our arXiv preprint: <a href="https://arxiv.org/abs/2303.10350" target="_blank">https://arxiv.org/abs/2303.10350</a>.
 </div>
+
+&nbsp;
+
+<div align="justify">
+<p xmlns:cc="http://creativecommons.org/ns#" xmlns:dct="http://purl.org/dc/terms/"><a property="dct:title" rel="cc:attributionURL" href="https://github.com/zv1991/Semi-Discrete-Scheme-for-Kirchhoff-Eqn">A Programming Code for a Three-Layer Semi-Discrete Scheme for the Nonlinear Dynamic String Equation of Kirchhoff-Type with Time-Dependent Coefficients</a> by <span property="cc:attributionName">Jemal Rogava, Zurab Vashakidze</span> is licensed under <a href="http://creativecommons.org/licenses/by/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer" style="display:inline-block;">CC BY 4.0<img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1"><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1"></a></p>
+</div>
