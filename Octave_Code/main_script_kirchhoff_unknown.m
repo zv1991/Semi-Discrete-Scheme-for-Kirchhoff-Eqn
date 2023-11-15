@@ -204,7 +204,7 @@ app_u = u_new(node_t,:)'; %%% If you need all data, please use u_new %%%
 filemat  = sprintf('Results_%s_ell_%.2f_T_%.2f_Tol%f.mat',Test,ell,T,Tol);
 matfile  = fullfile(dirname,filemat);
 save(matfile,'Tol','h','m','n','N','node_t','t','tau','app_u','x','T','ell',...
-'Delta','count','error');
+'Delta','CondN2','count','error');
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 clearvars -except matfile
