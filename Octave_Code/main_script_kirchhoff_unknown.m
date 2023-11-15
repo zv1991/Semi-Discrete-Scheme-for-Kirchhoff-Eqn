@@ -161,7 +161,7 @@ my_table_all = []; %% for all values of one table %%
 for i = 1:length(node_t)
   my_table     = [x',u_new(node_t(i),:)'];
   %%% Generate CSV file for SLR parameters %%%
-  filecsv      = sprintf('%s_ell_%.2f_T_%.2f_Solution_at_Node_%d_Tol%f.csv',...
+  filecsv      = sprintf('%s_ell_%.2f_T_%.2f_soln_at_node_%d_Tol%f.csv',...
   Test,ell,T,node_t(i) - 1,Tol);
   cHeader      = {'x',sprintf('u%.2f',t(node_t(i)))};
   save_as_csv (my_table, filecsv, dirname, cHeader);
@@ -173,7 +173,7 @@ endfor
 my_table_all = [x',my_table_all];
 
 %%% Generate CSV file %%%
-filecsv      = sprintf('%s_ell_%.2f_T_%.2f_Solution_at_all_nodes_Tol%f.csv',...
+filecsv      = sprintf('%s_ell_%.2f_T_%.2f_soln_at_all_nodes_Tol%f.csv',...
 Test,ell,T,Tol);
 cHeader      = {'x'};
 for i = 1:length(node_t)
@@ -185,15 +185,23 @@ save_as_csv (my_table_all, filecsv, dirname, cHeader);
 %%% Errors with tolerance and Maximum of Condition Number in CSV file %%%
 my_table = [(0:1:count - 1)',error,N,max_cond];
 filecsv  = sprintf(...
-'%s_ell_%.2f_T_%.2f_Error_and_Max_Cond_Number_for_N_%d_to_%d_Tol%f.csv',...
+'%s_ell_%.2f_T_%.2f_error_and_max_cond_number_for_N_%d_to_%d_Tol%f.csv',...
 Test,ell,T,N(1),N(end),Tol);
 cHeader  = {'count','Error','N','MaxCondN2'};
 save_as_csv (my_table, filecsv, dirname, cHeader);
 ################################################################################
 
+my_table = [Tol,N(end),count - 1,error(end)];
+filecsv  = sprintf(...
+'%s_ell_%.2f_T_%.2f_error_Tol%f_with_loop_numb_%d.csv',...
+Test,ell,T,Tol,count - 1);
+cHeader  = {'Tol','max_N','count','error'};
+save_as_csv (my_table, filecsv, dirname, cHeader);
+################################################################################
+
 %%% Condition number CSV file %%%
 my_table = [(0:n)',CondN2{count}];
-filecsv  = sprintf('%s_ell_%.2f_T_%.2f_Condition_number_n%d_Tol%f.csv',...
+filecsv  = sprintf('%s_ell_%.2f_T_%.2f_condition_number_n%d_Tol%f.csv',...
 Test,ell,T,n,Tol);
 cHeader  = {'k','CondN2'};
 save_as_csv (my_table, filecsv, dirname, cHeader);
