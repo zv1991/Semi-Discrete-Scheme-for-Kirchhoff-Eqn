@@ -11,7 +11,7 @@ format longG
 
 tStart = cputime; % For CPU time determination %
 
-r     = 2; %%% Power of the tolerance, e.g. 10^(-r) %%%
+r     = 3; %%% Power of the tolerance, e.g. 10^(-r) %%%
 Tol   = sprintf('1e-%d',r);
 Tol   = str2double(Tol);
 
