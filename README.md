@@ -1,1 +1,1 @@
-# Semi-Discrete-Scheme-for-Kirchhoff-Eq
+# On Convergence of a Three-layer Semi-discrete Scheme for the Nonlinear Dynamic String Equation of Kirchhoff-type with Time-dependent Coefficients
