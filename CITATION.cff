@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Rogava"
+  given-names: "Jemal"
+  orcid: "https://orcid.org/0000-0001-9460-4283"
+- family-names: "Vashakidze"
+  given-names: "Zurab"
+  orcid: "https://orcid.org/0000-0001-8736-6213"
+title: "A Programming Code for a Three-Layer Semi-Discrete Scheme for the Nonlinear Dynamic String Equation of Kirchhoff-Type with Time-Dependent Coefficients"
+version: 1.1.0
+doi: 10.5281/zenodo.10137813
+date-released: 2023-11-15
+url: "https://github.com/zv1991/Semi-Discrete-Scheme-for-Kirchhoff-Eqn"
