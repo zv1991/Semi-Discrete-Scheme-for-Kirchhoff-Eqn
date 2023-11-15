@@ -11,6 +11,10 @@ format longG
 
 tStart = cputime; % For CPU time determination %
 
+r     = 1; %%% Power of the tolerance, e.g. 10^(-r) %%%
+Tol   = sprintf('1e-%d',r);
+Tol   = str2double(Tol);
+
 %%% Length of spatial and temporal intervals %%%
 ell   = 4;
 T     = 1;
@@ -49,9 +53,6 @@ u_new = ones(n + 1,m + 1);
 N     = [];
 Delta = [];
 
-r     = 1; %%% Power of the tolerance, e.g. 10^(-r) %%%
-Tol   = sprintf('1e-%d',r);
-Tol   = str2double(Tol);
 count = 1;
 
 %%% For condition number %%%
