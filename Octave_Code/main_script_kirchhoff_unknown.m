@@ -14,7 +14,7 @@ tStart = cputime; % For CPU time determination %
 %%% Length of spatial and temporal intervals %%%
 ell   = 4;
 T     = 1;
-Test  = 'Test_UnknownSolution';
+Test  = 'Test4_(UnkSoln)';
 run(sprintf('%s.m',Test)); %% Run the test %%
 
 ################################################################################
@@ -46,10 +46,12 @@ u_old = zeros(n + 1,m + 1);
 n     = 2*n; %%% Division improvement %%%
 u_new = ones(n + 1,m + 1);
 ################################################################################
-N      = [];
-Delta  = [];
+N     = [];
+Delta = [];
 
-Tol   = 1e-4;
+r     = 1; %%% Power of the tolerance, e.g. 10^(-r) %%%
+Tol   = sprintf('1e-%d',r);
+Tol   = str2double(Tol);
 count = 1;
 
 %%% For condition number %%%
@@ -92,8 +94,6 @@ while max(max(abs(u_old - u_new(1:2:end,:)))) >= Tol
         tempdiff1  = tempdiff1 .* tempdiff1;
         %% q integral %%
         q2         = alpha(t(k)) + beta(t(k)) * SimpsRule (h, tempdiff1);
-        condn      = NaN; %%% Condition Number %%%
-        cond       = [cond;condn]; %%% Condition Number %%%
       otherwise
         v      = tau * tau * f(x,t(k - 1)) + 2 * u_new(k - 1,:);
         coeff1 = (delta * delta) / q2; % tridiagonal system coefficients %
@@ -119,7 +119,8 @@ while max(max(abs(u_old - u_new(1:2:end,:)))) >= Tol
     k = k + 1;
   endwhile
   error    = [error;max(max(abs(u_old - u_new(1:2:end,:))))];
-  max_cond = [max_cond;max(cond)];
+  cond     = [cond;NaN]; %%% Condition Number %%%
+  max_cond = [max_cond;max(cond(2:(end - 1)))];
   CondN2   = [CondN2,cond];
   count    = count + 1;
   fprintf('n = %d\n', n);
@@ -180,50 +181,21 @@ endfor
 clear ('i');
 save_as_csv (my_table_all, filecsv, dirname, cHeader);
 
+%%% Errors with tolerance and Maximum of Condition Number in CSV file %%%
+my_table = [(0:1:count - 1)',error,N,max_cond];
+filecsv  = sprintf(...
+'%s_ell_%.2f_T_%.2f_Error_and_Max_Cond_Number_for_N_%d_to_%d_Tol%f.csv',...
+Test,ell,T,N(1),N(end),Tol);
+cHeader  = {'count','Error','N','MaxCondN2'};
+save_as_csv (my_table, filecsv, dirname, cHeader);
+################################################################################
+
 %%% Condition number CSV file %%%
 my_table = [(0:n)',CondN2{count}];
 filecsv  = sprintf('%s_ell_%.2f_T_%.2f_Condition_number_n%d_Tol%f.csv',...
 Test,ell,T,n,Tol);
 cHeader  = {'k','CondN2'};
 save_as_csv (my_table, filecsv, dirname, cHeader);
-
-%%% Maximum of condition number for division number of the temporal variable %%%
-my_table = [N,max_cond];
-filecsv  = sprintf(...
-'%s_ell_%.2f_T_%.2f_Max_Cond_number_for_N_%d_to_%d_Tol%f.csv',...
-Test,ell,T,N(1),N(end),Tol);
-cHeader  = {'N','MaxCondN2'};
-save_as_csv (my_table, filecsv, dirname, cHeader);
-
-%%% Errors with tolerance %%%
-my_table = [(0:1:count - 1)',error];
-filecsv  = sprintf('%s_ell_%.2f_T_%.2f_Error_n%d_Tol%f.csv',...
-Test,ell,T,n,Tol);
-cHeader  = {'k','CondN2'};
-save_as_csv (my_table, filecsv, dirname, cHeader);
-
-%%% Condition numbers for k nodes %%%
-
-node_k        = [];
-node_CondN2   = [];
-my_cond_table = zeros(4,2*count);
-cHeader       = cell();
-for i = 1:count
-  node_i      = [N(i) / 4 + 1;N(i) / 2 + 1;(3 * N(i)) / 4 + 1;N(i) + 1];
-  node_cond   = CondN2{count}(node_i);
-  node_CondN2 = [node_CondN2,node_cond];
-  node_k      = [node_k,node_i - 1];
-
-  my_cond_table(:,2 * i - 1) = node_k(:,i);
-  my_cond_table(:,2 * i)     = node_CondN2(:,i);
-  cHeader                    = [cHeader,sprintf('k%d',i),...
-  sprintf('CondN2_%d',N(i))];
-endfor
-clear ('node_i', 'node_cond');
-filecsv  = sprintf(...
-'%s_ell_%.2f_T_%.2f_Cond_number_at_node_k_%d_to_%d_Tol%f.csv',...
-Test,ell,T,N(1),N(end),Tol);
-save_as_csv (my_cond_table, filecsv, dirname, cHeader);
 
 ################################################################################
 app_u = u_new(node_t,:)'; %%% If you need all data, please use u_new %%%
